@@ -55,6 +55,14 @@ body {
   border-color: #777;
 }
 
+.red-button {
+  border-color: #700;
+}
+
+.blue-button {
+  border-color: #007;
+}
+
 .column {
   text-align: center;
 }
