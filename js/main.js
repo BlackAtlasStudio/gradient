@@ -3,6 +3,8 @@ var gradient = [new ColorStop(0,0,0,0), new ColorStop(255,255,255, 100)];
 
 //Other needed variables
 var angle = 0;
+var radialTrack = false;
+var radialWidth = 0;
 
 //CSS stynax additions
 const pre = "linear-gradient(";
@@ -13,12 +15,32 @@ const post = ")"
 //
 
 $(document).ready(() => {
-
+  radialWidth = $("#radial").width() / 2;
 })
 
 //
 // UI RESPONSE
 //
+
+$(document).mousemove((event) => {
+  if (radialTrack) {
+    var offset = $("#radial").offset();
+    var x = event.pageX - offset.left - radialWidth;
+    var y = event.pageY - offset.top - radialWidth;
+    var a = 360 - toDegrees(Math.atan2(x, y)) + 180;
+    angle = a;
+    updateDisplay();
+    console.log(a);
+  }
+})
+
+$("#radial").mousedown(() => {
+  radialTrack = true;
+})
+
+$(document).mouseup(() => {
+  radialTrack = false;
+})
 
 $("#red").click(() => {
   $("body").css("background", getGradient());
@@ -43,6 +65,12 @@ function ColorStop (r, g, b, stop) {
 // HELPER FUNCTIONS
 //
 
+//Updates the background with current gradient
+function updateDisplay() {
+  $("body").css("background", getGradient());
+}
+
+//Returns formatted gradient string
 function getGradient() {
   var value = pre;
   value += angle + "deg";
@@ -53,6 +81,7 @@ function getGradient() {
   return value;
 }
 
+//Returns formatted color
 function getColor(color) {
   var value = "rgb(";
   if (color === undefined) {
@@ -64,4 +93,8 @@ function getColor(color) {
   }
   value += ")"
   return value;
+}
+
+function toDegrees(rad) {
+  return rad * (180 / Math.PI);
 }
