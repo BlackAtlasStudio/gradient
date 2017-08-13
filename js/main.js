@@ -1,5 +1,5 @@
 //Contains all color stops
-var gradient = [new ColorStop(241, 206, 239, 0), new ColorStop(199, 122, 218, 100)];
+var gradient = [new ColorStop(241, 206, 239, 0), new ColorStop(241, 206, 239, 50), new ColorStop(199, 122, 218, 100)];
 
 //Other needed variables
 var angle = 0;
@@ -16,6 +16,8 @@ const post = ")"
 
 $(document).ready(() => {
   radialWidth = $("#radial").width() / 2;
+  placeColorStops();
+  updateDisplay();
 })
 
 //
@@ -80,6 +82,27 @@ function updateDisplay() {
   console.log("Updating Display");
   $("body").css("background", getGradient());
   $("#output").val("background: " + getGradient() + ";");
+}
+
+//Adds all current color stops
+function placeColorStops() {
+  console.log("Adding Color Stops");
+  gradient.forEach((item, index, array) => {
+    console.log("Color Stop", index);
+    addColorStop(item, index);
+  })
+}
+
+//Adds individual color stop
+function addColorStop(colorStop, index) {
+  $("#gradient").append("<span id=\"cs"+index+"\" class=\"color-stop\">C</span>");
+  $("#cs" + index).offset({
+    top: 40 + $("#cs" + index).offset().top,
+    left: colorStop.stop/100 * $("#gradient").width()
+      + $("#cs" + index).offset().left
+      - $("#gradient").width()/2
+  });
+  $("#cs" + index).css("background-color", getColor(colorStop));
 }
 
 //Returns formatted gradient string

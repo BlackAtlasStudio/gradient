@@ -78,6 +78,23 @@ body {
   background-color: black;
 }
 
+.color-stop {
+  -webkit-user-select: none;
+  position: absolute;
+  min-width: 15px;
+  min-height: 20px;
+  width: 15px;
+  height: 20px;
+  background-color: white;
+  border-left: 2px;
+  border-right: 2px;
+  border-bottom: 2px;
+  border-color: black;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  box-shadow: 0px 2px 2px #000;
+}
+
 .section {
   padding: 10rem 0rem 7rem;
   text-align: center;
