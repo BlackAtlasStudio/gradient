@@ -33,16 +33,12 @@ $(document).mousemove((event) => {
     var len = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
     var a = Math.floor((360 - toDegrees(Math.atan2(x, y)) + 180) % 360);
     angle = a;
-    $("#rad-ind").offset({
-      top: y / len * radialWidth + offset.top + radialWidth - $("#rad-ind").width()/2,
-      left: x / len * radialWidth + offset.left + radialWidth - $("#rad-ind").width()/2
-    });
+    setRadialAngle();
     updateDisplay();
   }
 })
 
 $("#radial").mousedown((event) => {
-  console.log("Mousedown");
   event.preventDefault();
   radialTrack = true;
 })
@@ -51,21 +47,14 @@ $(document).mouseup(() => {
   radialTrack = false;
 })
 
-$("#linear").click(() => {
-  console.log("Linear");
-  gradientType = "linear";
-  updateDisplay();
-})
-
 $("#copy").click(() => {
-  console.log("Copying data");
   $("#output").get(0).select();
   document.execCommand("copy");
 })
 
 $("#reset").click(() => {
-  console.log("Reseting");
   angle = 0;
+  setRadialAngle();
   gradient = defaultGradient;
   updateDisplay();
 })
@@ -87,14 +76,12 @@ function ColorStop (r, g, b, stop) {
 
 //Updates the background with current gradient
 function updateDisplay() {
-  console.log("Updating Display");
   $("body").css("background", getGradient());
   $("#output").val("background: " + getGradient() + ";");
   updateColorGradient();
 }
 
 function updateColorGradient() {
-  console.log("Updaing Color Gradient");
   var grad = linearPre;
   grad += "90deg";
   gradient.forEach(function(item, index, array) {
@@ -106,9 +93,7 @@ function updateColorGradient() {
 
 //Adds all current color stops
 function placeColorStops() {
-  console.log("Adding Color Stops");
   gradient.forEach((item, index, array) => {
-    console.log("Color Stop", index);
     addColorStop(item, index);
   })
 }
@@ -123,6 +108,17 @@ function addColorStop(colorStop, index) {
       - $("#gradient").width()/2
   });
   $("#cs" + index).css("background-color", getColor(colorStop));
+}
+
+function setRadialAngle() {
+  var offset = $("#radial").offset();
+  var x, y;
+  x = Math.cos(toRadians(angle - 90));
+  y = Math.sin(toRadians(angle - 90));
+  $("#rad-ind").offset({
+    top: y * radialWidth + offset.top + radialWidth - $("#rad-ind").width()/2,
+    left: x * radialWidth + offset.left + radialWidth - $("#rad-ind").width()/2
+  });
 }
 
 //Returns formatted gradient string
@@ -152,5 +148,9 @@ function getColor(color) {
 }
 
 function toDegrees(rad) {
-  return rad * (180 / Math.PI);
+  return rad * 57.2958;
+}
+
+function toRadians(deg) {
+  return deg * 0.0174533;
 }
