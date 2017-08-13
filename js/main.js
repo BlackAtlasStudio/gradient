@@ -1,13 +1,26 @@
-var gradient = [[0,0,0, 0],[255,255,255, 50]]; //Start with white to black gradient
+//Contains all color stops
+var gradient = [new ColorStop(0,0,0,0), new ColorStop(255,255,255, 100)];
 
-var orientation = 0;
-var pre = "linear-gradient(";
-var post = ")"
+//Other needed variables
+var angle = 0;
 
-var start;
+//CSS stynax additions
+const pre = "linear-gradient(";
+const post = ")"
+
+//
+// DOCUMENT READY
+//
+
+$(document).ready(() => {
+
+})
+
+//
+// UI RESPONSE
+//
 
 $("#red").click(() => {
-  console.log(getGradient());
   $("body").css("background", getGradient());
 })
 
@@ -15,17 +28,24 @@ $("#blue").click(() => {
   $("body").css("background", "rgb(0,0,255)");
 })
 
-$(document).ready(() => {
-  start = new Date();
-  setInterval(() => {
-    orientation = (1 + orientation) % 360;
-    $("body").css("background", getGradient());
-  }, 50);
-})
+//
+// OBJECTS
+//
+
+function ColorStop (r, g, b, stop) {
+  this.r = r;
+  this.g = g;
+  this.b = b;
+  this.stop = stop;
+}
+
+//
+// HELPER FUNCTIONS
+//
 
 function getGradient() {
   var value = pre;
-  value += orientation + "deg";
+  value += angle + "deg";
   gradient.forEach(function(item, index, array) {
     value += ", " + getColor([item[0], item[1], item[2]]) + " " + item[3] + "%";
   });
