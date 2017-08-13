@@ -22,28 +22,60 @@ body {
   border-radius: 15px;
   border-width: 1px;
   border-color: #999;
-  height: 400px;
+  height: 200px;
   box-shadow: 0px 0px 10px -2px #888;
   margin-top: 15px;
 }
 
+.io {
+  font-family: monospace;
+  font-size: 1.5em;
+  width: -webkit-fill-available;
+  height: 100%;
+  border: 0px;
+  border-radius: 15px;
+  resize: none;
+}
+
+.io:focus {
+  border: 0px;
+}
+
+.center-parent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .gradient {
-  background: -webkit-linear-gradient(left, rgba(255, 0, 0, 1) 0%, rgba(0, 255, 0, 1) 100%);
+  background-image: -webkit-linear-gradient(left, rgba(255, 0, 0, 1) 0%, rgba(0, 255, 0, 1) 100%);
   min-width: 100%;
   min-height: 40px;
   border: 1px solid;
   border-radius: 10px;
   box-shadow: 0px 0px 5px 0px #888;
+  margin-top:40px;
 }
 
 .radial {
   -webkit-user-select: none;
   border-radius: 50%;
   background-color: #ddd;
-  min-width: 50px;
-  min-height: 50px;
-  max-height: 50px;
-  max-width: 50px;
+  min-width: 150px;
+  min-height: 150px;
+  max-height: 150px;
+  max-width: 150px;
+  box-shadow: 0px 0px 5px 0px #333;
+}
+
+.indicator {
+  position: absolute;
+  border-radius: 50%;
+  min-width: 10px;
+  min-height: 10px;
+  width: 10px;
+  height: 10px;
+  background-color: black;
 }
 
 .section {
@@ -65,18 +97,10 @@ body {
   border-color: #777;
 }
 
-.red-button {
-  border-color: #700;
-}
-
-.blue-button {
-  border-color: #007;
-}
-
 .column {
   text-align: center;
 }
 
 .spacer {
-  padding-top: 25px;
+  padding-top: 75px;
 }

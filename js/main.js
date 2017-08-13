@@ -1,5 +1,5 @@
 //Contains all color stops
-var gradient = [new ColorStop(0,0,0,0), new ColorStop(255,255,255, 100)];
+var gradient = [new ColorStop(241, 206, 239, 0), new ColorStop(199, 122, 218, 100)];
 
 //Other needed variables
 var angle = 0;
@@ -7,7 +7,7 @@ var radialTrack = false;
 var radialWidth = 0;
 
 //CSS stynax additions
-const pre = "linear-gradient(";
+const linearPre = "linear-gradient(";
 const post = ")"
 
 //
@@ -27,14 +27,20 @@ $(document).mousemove((event) => {
     var offset = $("#radial").offset();
     var x = event.pageX - offset.left - radialWidth;
     var y = event.pageY - offset.top - radialWidth;
-    var a = 360 - toDegrees(Math.atan2(x, y)) + 180;
+    var len = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+    var a = Math.floor((360 - toDegrees(Math.atan2(x, y)) + 180) % 360);
     angle = a;
+    $("#rad-ind").offset({
+      top: y / len * radialWidth + offset.top + radialWidth - $("#rad-ind").width() / 2,
+      left: x / len * radialWidth + offset.left + radialWidth - $("#rad-ind").width() / 2
+    });
     updateDisplay();
-    console.log(a);
   }
 })
 
-$("#radial").mousedown(() => {
+$("#radial").mousedown((event) => {
+  console.log("Mousedown");
+  event.preventDefault();
   radialTrack = true;
 })
 
@@ -42,12 +48,16 @@ $(document).mouseup(() => {
   radialTrack = false;
 })
 
-$("#red").click(() => {
-  $("body").css("background", getGradient());
+$("#linear").click(() => {
+  console.log("Linear");
+  gradientType = "linear";
+  updateDisplay();
 })
 
-$("#blue").click(() => {
-  $("body").css("background", "rgb(0,0,255)");
+$("#copy").click(() => {
+  console.log("Copying data");
+  $("#output").get(0).select();
+  document.execCommand("copy");
 })
 
 //
@@ -67,12 +77,15 @@ function ColorStop (r, g, b, stop) {
 
 //Updates the background with current gradient
 function updateDisplay() {
+  console.log("Updating Display");
   $("body").css("background", getGradient());
+  $("#output").val("background: " + getGradient() + ";");
 }
 
 //Returns formatted gradient string
 function getGradient() {
-  var value = pre;
+  var value = "";
+  value += linearPre;
   value += angle + "deg";
   gradient.forEach(function(item, index, array) {
     value += ", " + getColor(item) + " " + item.stop + "%";

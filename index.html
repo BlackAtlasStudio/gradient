@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Gradient Generator</title>
+    <title>Linear Gradient Generator</title>
 
     <!-- CSS -->
     <link href="css/normalize.css" rel="stylesheet" />
@@ -16,8 +16,8 @@
       <div class="container">
         <div class="row">
           <div class="column">
-            <h1 class="heading">Gradient Generator</h1>
-            <a class="button">Reset Controls</a>
+            <h1 class="heading">Linear Gradient Generator</h1>
+            <a id="reset" class="button">Reset Controls</a>
           </div>
         </div>
       </div>
@@ -25,23 +25,25 @@
     <div class="section content">
       <div class="container">
         <div class="row">
+          <div class="one-third column center-parent">
+            <div id="radial" class="radial center-child"><span id="rad-ind" class="indicator"></span></div>
+          </div>
           <div class="two-thirds column">
-            <a id="red" class="button red-button">Red</a>
-            <a id="blue" class="button blue-button">Blue</a>
-          </div>
-          <div class="one-third column">
-            <div id="radial" class="radial"></div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="spacer">
-
-          </div>
-        </div>
-        <div class="row">
-          <div class="offset-by-three six columns" style="background-color:green;">
             <div class="gradient">
 
+            </div>
+          </div>
+        </div>
+        <div class="row"><div class="spacer"></div></div>
+        <div class="row">
+          <div class="column">
+            <a id="copy" class="button u-pull-right">Copy</a>
+          </div>
+        </div>
+        <div class="row">
+          <div class="column">
+            <div class="well">
+              <textarea id="output" class="io" readonly></textarea>
             </div>
           </div>
         </div>
