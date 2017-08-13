@@ -1,5 +1,6 @@
 //Contains all color stops
 var gradient = [new ColorStop(241, 206, 239, 0), new ColorStop(241, 206, 239, 50), new ColorStop(199, 122, 218, 100)];
+var defaultGradient = [new ColorStop(0, 0, 0, 0), new ColorStop(255, 255, 255, 100)];
 
 //Other needed variables
 var angle = 0;
@@ -33,8 +34,8 @@ $(document).mousemove((event) => {
     var a = Math.floor((360 - toDegrees(Math.atan2(x, y)) + 180) % 360);
     angle = a;
     $("#rad-ind").offset({
-      top: y / len * radialWidth + offset.top + radialWidth - $("#rad-ind").width() / 2,
-      left: x / len * radialWidth + offset.left + radialWidth - $("#rad-ind").width() / 2
+      top: y / len * radialWidth + offset.top + radialWidth - $("#rad-ind").width()/2,
+      left: x / len * radialWidth + offset.left + radialWidth - $("#rad-ind").width()/2
     });
     updateDisplay();
   }
@@ -62,6 +63,13 @@ $("#copy").click(() => {
   document.execCommand("copy");
 })
 
+$("#reset").click(() => {
+  console.log("Reseting");
+  angle = 0;
+  gradient = defaultGradient;
+  updateDisplay();
+})
+
 //
 // OBJECTS
 //
@@ -82,6 +90,18 @@ function updateDisplay() {
   console.log("Updating Display");
   $("body").css("background", getGradient());
   $("#output").val("background: " + getGradient() + ";");
+  updateColorGradient();
+}
+
+function updateColorGradient() {
+  console.log("Updaing Color Gradient");
+  var grad = linearPre;
+  grad += "90deg";
+  gradient.forEach(function(item, index, array) {
+    grad += ", " + getColor(item) + " " + item.stop + "%";
+  });
+  grad += post;
+  $("#gradient").css("background", grad);
 }
 
 //Adds all current color stops
