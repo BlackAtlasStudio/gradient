@@ -47,7 +47,7 @@ function getGradient() {
   var value = pre;
   value += angle + "deg";
   gradient.forEach(function(item, index, array) {
-    value += ", " + getColor([item[0], item[1], item[2]]) + " " + item[3] + "%";
+    value += ", " + getColor(item) + " " + item.stop + "%";
   });
   value += post;
   return value;
@@ -55,12 +55,12 @@ function getGradient() {
 
 function getColor(color) {
   var value = "rgb(";
-  if (color.length == 3) {
-    value += color[0] + ",";
-    value += color[1] + ",";
-    value += color[2];
+  if (color === undefined) {
+    value += "60,40,20"; //Error color
   } else {
-    value += "160, 80, 0, 255";
+    value += color.r + ",";
+    value += color.g + ",";
+    value += color.b;
   }
   value += ")"
   return value;
