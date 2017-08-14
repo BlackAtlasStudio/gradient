@@ -6,6 +6,7 @@ var defaultGradient = [new ColorStop(0, 0, 0, 0), new ColorStop(255, 255, 255, 1
 var angle = 0;
 var radialTrack = false;
 var radialWidth = 0;
+var movingStop = "";
 
 //CSS stynax additions
 const linearPre = "linear-gradient(";
@@ -36,6 +37,46 @@ $(document).mousemove((event) => {
     setRadialAngle();
     updateDisplay();
   }
+
+  if (movingStop !== "") { //kinda jank but good enough
+    var cStopElem = $("#"+movingStop);
+    var cStopIndex = parseInt(movingStop.charAt(movingStop.length-1))
+    var cStop = gradient[cStopIndex];
+    var leftBound = 0, rightBound = 100;
+
+    if (cStopIndex > 0) {
+      leftBound = gradient[cStopIndex-1].stop;
+    }
+    if (cStopIndex < gradient.length - 1) {
+      rightBound = gradient[cStopIndex+1].stop;
+    }
+    console.log("Left:", leftBound, "Right:", rightBound);
+
+    //Calculate the stop delta
+    var deltaMove, deltaStop;
+    deltaMove = event.pageX - cStopElem.offset().left;
+    //console.log(deltaMove);
+    deltaStop = deltaMove / $("#gradient").width();
+    if (deltaStop > 0) {
+      deltaStop = Math.ceil(deltaStop);
+    } else {
+      deltaStop = Math.floor(deltaStop);
+    }
+    console.log(deltaStop, cStop.stop);
+
+    if (cStop.stop + deltaStop >= leftBound && cStop.stop + deltaStop <= rightBound) {
+      //We can move the stop here
+      cStopElem.offset({
+        left: cStopElem.offset().left + deltaMove,
+        top: cStopElem.offset().top
+      });
+      cStop.stop += deltaStop;
+    } else {
+      console.log("Can't move");
+    }
+
+    updateDisplay();
+  }
 })
 
 $("#radial").mousedown((event) => {
@@ -43,24 +84,9 @@ $("#radial").mousedown((event) => {
   radialTrack = true;
 })
 
-$("#cs0").click((event) => {
-  console.log("CS0");
-})
-$("#cs1").mousedown((event) => {
-  console.log("CS1");
-})
-$("#cs2").mousedown((event) => {
-  console.log("CS2");
-})
-$("#cs3").mousedown((event) => {
-  console.log("CS3");
-})
-$("#cs4").mousedown((event) => {
-  console.log("CS4");
-})
-
 $(document).mouseup(() => {
   radialTrack = false;
+  movingStop = "";
 })
 
 $("#copy").click(() => {
@@ -74,6 +100,11 @@ $("#reset").click(() => {
   gradient = defaultGradient;
   updateDisplay();
   updateColorStops();
+})
+
+$("#gradient").on("mousedown", ".color-stop", function() {
+  event.preventDefault();
+  movingStop = $(this).get(0).id;
 })
 
 $("#stopAdd").click(() => {
