@@ -31,7 +31,7 @@ $(document).mousemove((event) => {
     var x = event.pageX - offset.left - radialWidth;
     var y = event.pageY - offset.top - radialWidth;
     var len = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
-    var a = Math.floor((360 - toDegrees(Math.atan2(x, y)) + 180) % 360);
+    var a = Math.floor((360 - Math.toDegrees(Math.atan2(x, y)) + 180) % 360);
     angle = a;
     setRadialAngle();
     updateDisplay();
@@ -41,6 +41,22 @@ $(document).mousemove((event) => {
 $("#radial").mousedown((event) => {
   event.preventDefault();
   radialTrack = true;
+})
+
+$("#cs0").click((event) => {
+  console.log("CS0");
+})
+$("#cs1").mousedown((event) => {
+  console.log("CS1");
+})
+$("#cs2").mousedown((event) => {
+  console.log("CS2");
+})
+$("#cs3").mousedown((event) => {
+  console.log("CS3");
+})
+$("#cs4").mousedown((event) => {
+  console.log("CS4");
 })
 
 $(document).mouseup(() => {
@@ -56,6 +72,34 @@ $("#reset").click(() => {
   angle = 0;
   setRadialAngle();
   gradient = defaultGradient;
+  updateDisplay();
+  updateColorStops();
+})
+
+$("#stopAdd").click(() => {
+
+})
+
+$("#stopSub").click(() => {
+
+})
+
+$("#random").click(() => {
+  var stops = Math.randomRange(2,3);
+  gradient = [];
+  var previousP = 0;
+  for (var i = 0; i < stops; i++) {
+    var r,g,b,p;
+    r = Math.randomRange(0,255);
+    g = Math.randomRange(0,255);
+    b = Math.randomRange(0,255);
+    p = Math.randomRange(previousP,100);
+    previousP = p;
+    gradient.push(new ColorStop(r,g,b,p));
+  }
+  angle = Math.randomRange(0,360);
+  updateColorStops();
+  setRadialAngle();
   updateDisplay();
 })
 
@@ -81,6 +125,11 @@ function updateDisplay() {
   updateColorGradient();
 }
 
+function updateColorStops() {
+  $("#gradient").empty();
+  placeColorStops();
+}
+
 function updateColorGradient() {
   var grad = linearPre;
   grad += "90deg";
@@ -100,12 +149,11 @@ function placeColorStops() {
 
 //Adds individual color stop
 function addColorStop(colorStop, index) {
-  $("#gradient").append("<span id=\"cs"+index+"\" class=\"color-stop\">C</span>");
+  $("#gradient").append("<div id=\"cs"+index+"\" class=\"color-stop\"></div>");
   $("#cs" + index).offset({
     top: 40 + $("#cs" + index).offset().top,
-    left: colorStop.stop/100 * $("#gradient").width()
-      + $("#cs" + index).offset().left
-      - $("#gradient").width()/2
+    left: colorStop.stop/100 * ($("#gradient").width() - 35)
+      + $("#cs" + index).offset().left + 10
   });
   $("#cs" + index).css("background-color", getColor(colorStop));
 }
@@ -113,8 +161,8 @@ function addColorStop(colorStop, index) {
 function setRadialAngle() {
   var offset = $("#radial").offset();
   var x, y;
-  x = Math.cos(toRadians(angle - 90));
-  y = Math.sin(toRadians(angle - 90));
+  x = Math.cos(Math.toRadians(angle - 90));
+  y = Math.sin(Math.toRadians(angle - 90));
   $("#rad-ind").offset({
     top: y * radialWidth + offset.top + radialWidth - $("#rad-ind").width()/2,
     left: x * radialWidth + offset.left + radialWidth - $("#rad-ind").width()/2
@@ -147,10 +195,18 @@ function getColor(color) {
   return value;
 }
 
-function toDegrees(rad) {
+//
+// UTILITY FUNCTIONS
+//
+
+Math.randomRange = function (a,b) {
+    return Math.floor(Math.random() * (b - a + 1) + a);
+}
+
+Math.toDegrees = function (rad) {
   return rad * 57.2958;
 }
 
-function toRadians(deg) {
+Math.toRadians = function (deg) {
   return deg * 0.0174533;
 }

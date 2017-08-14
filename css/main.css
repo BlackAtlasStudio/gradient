@@ -48,13 +48,13 @@ body {
 }
 
 .gradient {
-  background-image: -webkit-linear-gradient(left, rgba(255, 0, 0, 1) 0%, rgba(0, 255, 0, 1) 100%);
+  background-image: ;
   min-width: 100%;
   min-height: 40px;
   border: 1px solid;
   border-radius: 10px;
   box-shadow: 0px 0px 5px 0px #888;
-  margin-top:40px;
+  margin-top: 5px;
 }
 
 .radial {
@@ -66,6 +66,7 @@ body {
   max-height: 150px;
   max-width: 150px;
   box-shadow: 0px 0px 5px 0px #333;
+  cursor: pointer;
 }
 
 .indicator {
@@ -86,13 +87,28 @@ body {
   width: 15px;
   height: 20px;
   background-color: white;
-  border-left: 2px;
-  border-right: 2px;
-  border-bottom: 2px;
-  border-color: black;
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
-  box-shadow: 0px 2px 2px #000;
+  border: 1px solid #000000;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  border-top: 0px;
+  cursor: pointer;
+}
+
+.stop-add {
+  top: 35px;
+  display: inline-block;
+  margin-left: 5px;
+  width: 20px;
+  height: 20px;
+  padding: 0px;
+}
+
+.stop-sub {
+  display: inline-block;
+  top: 35px;
+  width: 20px;
+  height: 20px;
+  padding: 0px;
 }
 
 .section {
@@ -111,7 +127,8 @@ body {
 
 .button {
   -webkit-user-select: none;
-  border-color: #777;
+  margin-bottom: 0px;
+  border-color: #000;
 }
 
 .column {
