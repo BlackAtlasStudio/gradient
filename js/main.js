@@ -151,8 +151,13 @@ function ColorStop (r, g, b, stop) {
 
 //Updates the background with current gradient
 function updateDisplay() {
-  $("body").css("background", getGradient());
-  $("#output").val("background: " + getGradient() + ";");
+  var g = getGradient();
+  $("body").css("background", g);
+  $("#output").val("background: " + g + ";" +
+    "\nbackground: -webkit-" + g + ";" +
+    "\nbackground: -o-" + g + ";" +
+    "\nbackground: -moz-" + g + ";"
+  );
   updateColorGradient();
 }
 
