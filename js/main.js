@@ -160,6 +160,13 @@ $("#random").click(() => {
   updateDisplay();
 })
 
+$(window).resize(() => {
+  console.log("Resizing Gradient");
+  gSlide.width = $("#gradient").width();
+  gSlide.offset = {left: gSlide.width / 60, right: gSlide.width/20};
+  updateColorStops();
+})
+
 //
 // OBJECTS
 //
@@ -204,7 +211,12 @@ function updateDisplay() {
     "\nbackground: -o-" + g + ";" +
     "\nbackground: -moz-" + g + ";"
   );
+  updateActiveColor();
   updateColorGradient();
+}
+
+function updateActiveColor() {
+
 }
 
 function updateColorStops() {
