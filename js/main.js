@@ -144,15 +144,15 @@ function GradientSlider (width, stops) {
   this.width = width;
   this.stops = stops;
   this.getBounds = function(stop) {
-    
+
   }
 }
 
-function ColorStop (r, g, b, p, elem) {
+function ColorStop (r, g, b, stop, elem) {
   this.r = r; //Red
   this.g = g; //Green
   this.b = b; //Blue
-  this.percent = p; //Percent
+  this.stop = stop; //Percent
   this.element = elem; //ColorStop Element
 }
 
