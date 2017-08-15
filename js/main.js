@@ -8,7 +8,9 @@ var radialTrack = false;
 var radialWidth = 0;
 var movingStop = "";
 
-//CSS stynax additions
+var gSlide = new GradientSlider($("#gradient").width(), gradient);
+
+//CSS stynax strings
 const linearPre = "linear-gradient(";
 const post = ")"
 
@@ -42,7 +44,7 @@ $(document).mousemove((event) => {
     var cStopElem = $("#"+movingStop);
     var cStopIndex = parseInt(movingStop.charAt(movingStop.length-1))
     var cStop = gradient[cStopIndex];
-    var leftBound = 0, rightBound = 100;
+    var leftBound = 0, rightBound = $("#gradient").width();
 
     if (cStopIndex > 0) {
       leftBound = gradient[cStopIndex-1].stop;
@@ -138,11 +140,20 @@ $("#random").click(() => {
 // OBJECTS
 //
 
-function ColorStop (r, g, b, stop) {
-  this.r = r;
-  this.g = g;
-  this.b = b;
-  this.stop = stop;
+function GradientSlider (width, stops) {
+  this.width = width;
+  this.stops = stops;
+  this.getBounds = function(stop) {
+    
+  }
+}
+
+function ColorStop (r, g, b, p, elem) {
+  this.r = r; //Red
+  this.g = g; //Green
+  this.b = b; //Blue
+  this.percent = p; //Percent
+  this.element = elem; //ColorStop Element
 }
 
 //
