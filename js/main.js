@@ -50,7 +50,7 @@ $(document).mousemove((event) => {
   if (movingStop !== "") { //kinda jank but good enough
     var cStopElem = $("#"+movingStop);
     var cStopIndex = parseInt(movingStop.charAt(movingStop.length-1))
-    var cStop = gradient[cStopIndex];
+    var cStop = gSlide.stops[cStopIndex];
     var leftBound, rightBound;
     leftBound = gSlide.left();
     rightBound = gSlide.right();
@@ -58,7 +58,7 @@ $(document).mousemove((event) => {
     if (cStopIndex > 0) {
       leftBound = $("#cs" + (cStopIndex-1)).offset().left;
     }
-    if (cStopIndex < gradient.length - 1) {
+    if (cStopIndex < gSlide.stops.length - 1) {
       rightBound =  $("#cs" + (cStopIndex+1)).offset().left;
     }
 
@@ -115,7 +115,7 @@ $("#copy").click(() => {
 $("#reset").click(() => {
   angle = 0;
   setRadialAngle();
-  gradient = defaultGradient;
+  gSlide.stops = defaultGradient;
   updateDisplay();
   updateColorStops();
 })
@@ -127,7 +127,6 @@ $("#gradient").on("mousedown", ".color-stop", function() {
 })
 
 $("#gradient").on("click", ".color-stop", function() {
-  console.log($(this).get(0).id);
   event.preventDefault();
   var s = $(this).get(0).id
   gSlide.setActive(parseInt(s.charAt(s.length-1)));
@@ -143,7 +142,7 @@ $("#stopSub").click(() => {
 
 $("#random").click(() => {
   var stops = Math.randomRange(2,3);
-  gradient = [];
+  gSlide.stops = [];
   var previousP = 0;
   for (var i = 0; i < stops; i++) {
     var r,g,b,p;
@@ -152,16 +151,16 @@ $("#random").click(() => {
     b = Math.randomRange(0,255);
     p = Math.randomRange(previousP,100);
     previousP = p;
-    gradient.push(new ColorStop(r,g,b,p));
+    gSlide.stops.push(new ColorStop(r,g,b,p));
   }
   angle = Math.randomRange(0,360);
   updateColorStops();
+  gSlide.setActive(0);
   setRadialAngle();
   updateDisplay();
 })
 
 $(window).resize(() => {
-  console.log("Resizing Gradient");
   gSlide.width = $("#gradient").width();
   gSlide.offset = {left: gSlide.width / 60, right: gSlide.width/20};
   updateColorStops();
@@ -187,6 +186,7 @@ function GradientSlider (elem, width, stops, offset, activeStop) {
       $("#cs"+this.activeStop).removeClass("active");
       $("#cs"+stop).addClass("active");
       this.activeStop = stop;
+      updateActiveColor();
     }
   }
 }
@@ -211,12 +211,11 @@ function updateDisplay() {
     "\nbackground: -o-" + g + ";" +
     "\nbackground: -moz-" + g + ";"
   );
-  updateActiveColor();
   updateColorGradient();
 }
 
 function updateActiveColor() {
-
+  $("#activeColor").css("background", getColor(gSlide.stops[gSlide.activeStop]));
 }
 
 function updateColorStops() {
@@ -227,7 +226,7 @@ function updateColorStops() {
 function updateColorGradient() {
   var grad = linearPre;
   grad += "90deg";
-  gradient.forEach(function(item, index, array) {
+  gSlide.stops.forEach(function(item, index, array) {
     grad += ", " + getColor(item) + " " + item.stop + "%";
   });
   grad += post;
@@ -236,7 +235,7 @@ function updateColorGradient() {
 
 //Adds all current color stops
 function placeColorStops() {
-  gradient.forEach((item, index, array) => {
+  gSlide.stops.forEach((item, index, array) => {
     addColorStop(item, index);
   })
 }
@@ -268,7 +267,7 @@ function getGradient() {
   var value = "";
   value += linearPre;
   value += angle + "deg";
-  gradient.forEach(function(item, index, array) {
+  gSlide.stops.forEach(function(item, index, array) {
     value += ", " + getColor(item) + " " + item.stop + "%";
   });
   value += post;
