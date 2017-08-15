@@ -27,6 +27,12 @@ body {
   margin-top: 15px;
 }
 
+.well-container {
+  margin-left: 5%;
+  margin-right: 5%;
+  width: 90%;
+}
+
 .io {
   font-family: monospace;
   font-size: 1.2em;

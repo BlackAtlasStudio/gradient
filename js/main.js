@@ -216,6 +216,8 @@ function updateDisplay() {
 
 function updateActiveColor() {
   $("#activeColor").css("background", getColor(gSlide.stops[gSlide.activeStop]));
+  var c = gSlide.stops[gSlide.activeStop];
+  $("#activeColorHex").text(("#"+c.r.toString(16)+c.g.toString(16)+c.b.toString(16)).toUpperCase());
 }
 
 function updateColorStops() {
