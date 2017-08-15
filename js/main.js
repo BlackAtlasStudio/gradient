@@ -8,7 +8,11 @@ var radialTrack = false;
 var radialWidth = 0;
 var movingStop = "";
 
-var gSlide = new GradientSlider($("#gradient").width(), gradient);
+var gSlide = new GradientSlider(
+  $("#gradient"),
+  $("#gradient").width(),
+  gradient,
+  {left: 10, right: 25});
 
 //CSS stynax strings
 const linearPre = "linear-gradient(";
@@ -44,38 +48,47 @@ $(document).mousemove((event) => {
     var cStopElem = $("#"+movingStop);
     var cStopIndex = parseInt(movingStop.charAt(movingStop.length-1))
     var cStop = gradient[cStopIndex];
-    var leftBound = 0, rightBound = $("#gradient").width();
+    var leftBound, rightBound;
+    leftBound = gSlide.left();
+    rightBound = gSlide.right();
 
     if (cStopIndex > 0) {
-      leftBound = gradient[cStopIndex-1].stop;
+      leftBound = $("#cs" + (cStopIndex-1)).offset().left;
     }
     if (cStopIndex < gradient.length - 1) {
-      rightBound = gradient[cStopIndex+1].stop;
+      rightBound =  $("#cs" + (cStopIndex+1)).offset().left;
     }
-    console.log("Left:", leftBound, "Right:", rightBound);
 
     //Calculate the stop delta
-    var deltaMove, deltaStop;
+    var deltaMove;
     deltaMove = event.pageX - cStopElem.offset().left;
-    //console.log(deltaMove);
-    deltaStop = deltaMove / $("#gradient").width();
-    if (deltaStop > 0) {
-      deltaStop = Math.ceil(deltaStop);
-    } else {
-      deltaStop = Math.floor(deltaStop);
-    }
-    console.log(deltaStop, cStop.stop);
 
-    if (cStop.stop + deltaStop >= leftBound && cStop.stop + deltaStop <= rightBound) {
-      //We can move the stop here
+    //Move Stop
+    if (cStopElem.offset().left + deltaMove > leftBound && cStopElem.offset().left + deltaMove < rightBound) {
+      //Can move either way
       cStopElem.offset({
         left: cStopElem.offset().left + deltaMove,
         top: cStopElem.offset().top
       });
-      cStop.stop += deltaStop;
-    } else {
-      console.log("Can't move");
+    } else if (cStopElem.offset().left + deltaMove < leftBound) {
+      cStopElem.offset({
+        left: leftBound,
+        top: cStopElem.offset().top
+      });
+    } else if (cStopElem.offset().left + deltaMove > rightBound) {
+      cStopElem.offset({
+        left: rightBound,
+        top: cStopElem.offset().top
+      });
     }
+
+    //Calculate new stop value
+    var newStop = cStopElem.offset().left - gSlide.left();
+    newStop /= gSlide.right() - gSlide.left();
+    newStop *= 100;
+    newStop = Math.round(newStop);
+
+    cStop.stop = newStop;
 
     updateDisplay();
   }
@@ -140,20 +153,23 @@ $("#random").click(() => {
 // OBJECTS
 //
 
-function GradientSlider (width, stops) {
+function GradientSlider (elem, width, stops, offset) {
   this.width = width;
   this.stops = stops;
-  this.getBounds = function(stop) {
-
+  this.element = elem;
+  this.left = function () {
+    return elem.offset().left + offset.left;
+  }
+  this.right = function () {
+    return elem.offset().left + this.width - offset.right;
   }
 }
 
-function ColorStop (r, g, b, stop, elem) {
+function ColorStop (r, g, b, stop) {
   this.r = r; //Red
   this.g = g; //Green
   this.b = b; //Blue
   this.stop = stop; //Percent
-  this.element = elem; //ColorStop Element
 }
 
 //
