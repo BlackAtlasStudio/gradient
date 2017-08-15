@@ -12,7 +12,9 @@ var gSlide = new GradientSlider(
   $("#gradient"),
   $("#gradient").width(),
   gradient,
-  {left: 10, right: 25});
+  {left: 10, right: 25},
+  0
+);
 
 //CSS stynax strings
 const linearPre = "linear-gradient(";
@@ -25,6 +27,7 @@ const post = ")"
 $(document).ready(() => {
   radialWidth = $("#radial").width() / 2;
   placeColorStops();
+  gSlide.setActive(1);
   updateDisplay();
 })
 
@@ -120,6 +123,14 @@ $("#reset").click(() => {
 $("#gradient").on("mousedown", ".color-stop", function() {
   event.preventDefault();
   movingStop = $(this).get(0).id;
+  gSlide.setActive(parseInt(movingStop.charAt(movingStop.length-1)));
+})
+
+$("#gradient").on("click", ".color-stop", function() {
+  console.log($(this).get(0).id);
+  event.preventDefault();
+  var s = $(this).get(0).id
+  gSlide.setActive(parseInt(s.charAt(s.length-1)));
 })
 
 $("#stopAdd").click(() => {
@@ -153,7 +164,7 @@ $("#random").click(() => {
 // OBJECTS
 //
 
-function GradientSlider (elem, width, stops, offset) {
+function GradientSlider (elem, width, stops, offset, activeStop) {
   this.width = width;
   this.stops = stops;
   this.element = elem;
@@ -162,6 +173,14 @@ function GradientSlider (elem, width, stops, offset) {
   }
   this.right = function () {
     return elem.offset().left + this.width - offset.right;
+  }
+  this.activeStop = activeStop;
+  this.setActive = function(stop) {
+    if (stop >= 0 && stop < this.stops.length) {
+      $("#cs"+this.activeStop).removeClass("active");
+      $("#cs"+stop).addClass("active");
+      this.activeStop = stop;
+    }
   }
 }
 
