@@ -8,6 +8,10 @@ var radialTrack = false;
 var radialWidth = 0;
 var movingStop = "";
 
+//Canvas variables
+var wheelCanvas = $("#colorWheel").get(0);
+var wheelCtx = wheelCanvas.getContext("2d");
+
 var gSlide = new GradientSlider(
   $("#gradient"),
   $("#gradient").width(),
@@ -28,6 +32,7 @@ $(document).ready(() => {
   radialWidth = $("#radial").width() / 2;
   placeColorStops();
   gSlide.setActive(1);
+  drawColorWheel();
   updateDisplay();
 })
 
@@ -133,11 +138,11 @@ $("#gradient").on("click", ".color-stop", function() {
 })
 
 $("#stopAdd").click(() => {
-
+  addNewColorStop();
 })
 
 $("#stopSub").click(() => {
-
+  removeActiveStop();
 })
 
 $("#random").click(() => {
@@ -214,6 +219,33 @@ function updateDisplay() {
   updateColorGradient();
 }
 
+function drawColorWheel() {
+  console.log("Drawing Color Wheel");
+  var wheelData = wheelCtx.createImageData(wheelCanvas.width, wheelCanvas.height);
+  var data = wheelData.data;
+
+  for (var i = 0; i < data.length; i += 4) {
+    var x, y;
+    var color = getWheelColorAt(x, y);
+    data[i] = color[0];
+    data[i+1] = color[1];
+    data[i+2] = color[2];
+    data[i+3] = color[3];
+  }
+
+  wheelData.data = data;
+
+  wheelCtx.putImageData(wheelData, 0, 0);
+}
+
+function getWheelColorAt(x, y) {
+  var color = [0,0,0,0];
+
+  color = [80,100,240,255];
+
+  return color;
+}
+
 function updateActiveColor() {
   $("#activeColor").css("background", getColor(gSlide.stops[gSlide.activeStop]));
   var c = gSlide.stops[gSlide.activeStop];
@@ -240,6 +272,26 @@ function placeColorStops() {
   gSlide.stops.forEach((item, index, array) => {
     addColorStop(item, index);
   })
+}
+
+function removeActiveStop() {
+  if (gSlide.stops.length > 1) {
+    gSlide.stops.splice(gSlide.activeStop, 1);
+  }
+  gSlide.setActive(0);
+  updateColorStops();
+  updateActiveColor();
+  updateDisplay();
+}
+
+function addNewColorStop() {
+  if (gSlide.stops.length < 6) {
+    gSlide.stops.push(new ColorStop(255,255,255, 100));
+    updateColorStops();
+    gSlide.setActive(gSlide.stops.length-1);
+    updateActiveColor();
+    updateDisplay();
+  }
 }
 
 //Adds individual color stop

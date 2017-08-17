@@ -46,7 +46,7 @@ body {
   top: 20px;
   right: 20px;
   background-color: black;
-  border-radius: 15px;
+  border-radius: 50%;
 }
 
 .active-color {
